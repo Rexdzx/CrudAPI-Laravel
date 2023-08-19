@@ -11,6 +11,16 @@ use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+
+
+    protected $PostModel;
+
+    public function __construct(Post $PostModel)
+    {
+        $this->PostModel = $PostModel;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +29,7 @@ class PostController extends Controller
     public function index()
     {
         // $posts = Post::latest()->paginate(3)->get();
-        $posts = Post::latest()->get();
+        $posts = $this->PostModel->latest()->get();
         return response()->json([
             'data' => PostResource::collection($posts),
             'message' => 'Mengambil Semua Data',
@@ -51,11 +61,10 @@ class PostController extends Controller
             'status' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
-                'success' => false,
             ]);
         }
 
@@ -83,7 +92,7 @@ class PostController extends Controller
     {
         return response()->json([
             'data' => new PostResource($post),
-            'message' => 'Data Postingan Ditemukan',
+            'message' => 'Postingan Berhasil Ditampilkan',
             'success' => true,
         ]);
     }
@@ -96,7 +105,6 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        
     }
 
     /**
@@ -114,7 +122,7 @@ class PostController extends Controller
             'status' => 'required',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'data' => [],
                 'message' => $validator->errors(),
